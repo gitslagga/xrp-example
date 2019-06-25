@@ -5,18 +5,18 @@ const xrp = require('../lib/websocket')
 const logger = require('../lib/logger')
 
 async function assetsTransfer(from, key, to, value, memo) {
-    const bobAssets = await xrp.getBalances(from)
-    logger.info('bobAssets: ', JSON.stringify(bobAssets))
+    // const bobAssets = await xrp.getBalances(from)
+    // logger.info('bobAssets: ', JSON.stringify(bobAssets))
 
-    const free = bobAssets.filter(assets => assets.currency === 'XRP').map(data => {
-        return data.value
-    })
+    // const free = bobAssets.filter(assets => assets.currency === 'XRP').map(data => {
+    //     return data.value
+    // })
 
-    const fee = await xrp.getFee()
-    if (free < (value + fee)) {
-        logger.info(`${from} has ${free} amount, need ${value + fee} amount`)
-        return { code: 400, msg: 'not enough amount' }
-    }
+    // const fee = await xrp.getFee()
+    // if (free < (value + fee)) {
+    //     logger.info(`${from} has ${free} amount, need ${value + fee} amount`)
+    //     return { code: 400, msg: 'not enough amount' }
+    // }
 
     // const result = await xrp.preparePayment(from, {
     //     "source": {
@@ -47,33 +47,42 @@ async function assetsTransfer(from, key, to, value, memo) {
     // return { code: 0, data: result }
 
 
+    const address = 'rnJNioQ53oo3GNcyWz5sF68JVeViuVGEp6'
+    const secret = 'snfwqG9w63krZe34ArCJwnWYCvGv6'
+    const amount = 10
+    xrp.connect().then(() => {
+        console.log('Connected...')
 
-    xrp.preparePayment(from, {
-        source: {
-            address: from,
-            maxAmount: {
-                value: value,
-                currency: 'XRP'
+        const account = xrp.generateAddress()
+        console.log('Generated new account:', account.address)
+
+        return xrp.preparePayment(address, {
+            source: {
+                address: address,
+                maxAmount: {
+                    value: amount,
+                    currency: 'XRP'
+                }
+            },
+            destination: {
+                address: account.address,
+                amount: {
+                    value: amount,
+                    currency: 'XRP'
+                }
             }
-        },
-        destination: {
-            address: to,
-            amount: {
-                value: value,
-                currency: 'XRP'
-            }
-        }
-    }, {maxLedgerVersionOffset: 5}).then(prepared => {
-        const {signedTransaction} = xrp.sign(prepared.txJSON, key);
-        console.log('Payment transaction signed...');
-        xrp.submit(signedTransaction).then(() => {
-            console.log(`Funded ${from} with ${value} XRP`)
-            return {
-                account: account,
-                balance: Number(amount)
-            }
+        }, { maxLedgerVersionOffset: 5 }).then(prepared => {
+            const { signedTransaction } = xrp.sign(prepared.txJSON, secret);
+            console.log('Payment transaction signed...');
+            xrp.submit(signedTransaction).then(() => {
+                console.log(`Funded ${account.address} with ${amount} XRP`)
+                res.send({
+                    account: account,
+                    balance: Number(amount)
+                })
+            })
         })
-    })
+    }).catch(err => { console.log(err) })
 }
 
 
@@ -83,12 +92,12 @@ router.post('/assetsTransfer', async function (req, res) {
 
     logger.info('Request Body: ', req.body)
 
-    xrp.connect().then(async () => {
+    // xrp.connect().then(async () => {
         const transfers = await assetsTransfer(req.body.from, req.body.key, req.body.to, req.body.value, req.body.memo)
-        res.json(transfers)
-    }).then(() => {
-        xrp.disconnect()
-    })
+        // res.json(transfers)
+    // }).then(() => {
+        // xrp.disconnect()
+    // })
 })
 
 module.exports = router
