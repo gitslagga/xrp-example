@@ -1,0 +1,20 @@
+Alice Address
+rnJNioQ53oo3GNcyWz5sF68JVeViuVGEp6
+Secret
+snfwqG9w63krZe34ArCJwnWYCvGv6
+Balance
+10,000 XRP
+
+
+Bob Address
+raFU6QmuBbRFWW1cLsg2LiFTaPtgnikpRc
+Secret
+ssbscpGwrJndoJQ7GbvGpVGGyDn6K
+Balance
+10,000 XRP
+
+
+RIPPLED_URI="wss://s.altnet.rippletest.net:51233" FUNDING_ADDRESS=rHLS3mEpvU5NpEKwGnjyUkMwSKxJEPizWT FUNDING_SECRET=spusYsA31U58wtm3cXYV2BNJFZa2Q XRP_AMOUNT=10000 npm start
+
+
+r9cZA1mLK5R5Am25ArfXFmqgNwjZgnfk59      sequence 1

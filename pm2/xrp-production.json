@@ -1,0 +1,12 @@
+{
+    "apps": [{
+        "name": "xrp-production",
+        "script": "./index.js",
+        "log_date_format": "YYYY-MM-DD HH:mm:ss SSS",
+        "env": {
+            "NODE_ENV": "production"
+        },
+        "output": "/tmp/wwwlogs/xrp-production/out.log",
+        "error": "/tmp/wwwlogs/xrp-production/error.log"
+    }]
+}
