@@ -45,7 +45,7 @@ router.post('/getBalances', async function (req, res) {
 
         res.json({ code: 0, data: data })
     }).then(() => {
-        return xrp.disconnect();
+        xrp.disconnect()
     })
 })
 
@@ -61,7 +61,7 @@ router.post('/getAccountInfo', async (req, res) => {
         logger.info('Account Info: ', JSON.stringify(account_info))
         res.json({code: 0, data: account_info})
     }).then(() => {
-        return xrp.disconnect();
+        xrp.disconnect()
     })
 })
 

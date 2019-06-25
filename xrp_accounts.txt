@@ -18,3 +18,5 @@ RIPPLED_URI="wss://s.altnet.rippletest.net:51233" FUNDING_ADDRESS=rHLS3mEpvU5NpE
 
 
 r9cZA1mLK5R5Am25ArfXFmqgNwjZgnfk59      sequence 1
+
+terminal.integrated.shell.windows
