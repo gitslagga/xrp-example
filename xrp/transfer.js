@@ -43,10 +43,10 @@ async function assetsTransfer(from, key, to, value, memo) {
 
                 await xrp.getServerInfo().then(info => {
                     logger.info('getServerInfo: ', info)
-                    const arr = String(info.completeLedgers).split('-')
+                    const arr = info.completeLedgers.split('-')
                     const options = {
-                        minLedgerVersion: arr[0],
-                        maxLedgerVersion: arr[1]
+                        minLedgerVersion: Number(arr[0]),
+                        maxLedgerVersion: Number(arr[1])
                     }
                     xrp.getTransaction(id, options).then((result) => {
                         res.json({ code: 0, data: result})
@@ -82,10 +82,10 @@ router.post('/getTransaction', async function (req, res) {
     xrpPromise.then(() => {
         xrp.getServerInfo().then(info => {
             logger.info('getServerInfo: ', info)
-            const arr = String(info.completeLedgers).split('-')
+            const arr = info.completeLedgers.split('-')
             const options = {
-                minLedgerVersion: arr[0],
-                maxLedgerVersion: arr[1]
+                minLedgerVersion: Number(arr[0]),
+                maxLedgerVersion: Number(arr[1])
             }
             xrp.getTransaction(req.body.id, options).then((result) => {
                 res.json({ code: 0, data: result})
