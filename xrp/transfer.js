@@ -11,18 +11,18 @@ async function assetsTransfer(from, key, to, value, memo) {
     const amount = '100000000'
     
     xrpPromise.then(async () => {
-        // const bobAssets = await xrp.getBalances(from)
-        // logger.info('bobAssets: ', JSON.stringify(bobAssets))
+        const bobAssets = await xrp.getBalances(from)
+        logger.info('bobAssets: ', JSON.stringify(bobAssets))
     
-        // const free = bobAssets.filter(assets => assets.currency === 'XRP').map(data => {
-        //     return data.value
-        // })
+        const free = bobAssets.filter(assets => assets.currency === 'XRP').map(data => {
+            return Number(data.value)
+        })[0]
     
-        // const fee = await xrp.getFee()
-        // if (free < (value + fee)) {
-        //     logger.info(`${from} has ${free} amount, need ${value + fee} amount`)
-        //     return { code: 400, msg: 'not enough amount' }
-        // }
+        const fee = await xrp.getFee()
+        if (free < (value + fee)) {
+            logger.info(`${from} has ${free} amount, need ${value + fee} amount`)
+            return { code: 400, msg: 'not enough amount' }
+        }
 
         const account = {
             address: 'raFU6QmuBbRFWW1cLsg2LiFTaPtgnikpRc',
@@ -82,12 +82,15 @@ router.post('/getTransaction', async function (req, res) {
     logger.info('Request Body: ', req.body)
 
     xrpPromise.then(() => {
-        const options = {
-            minLedgerVersion: 19520071,
-            maxLedgerVersion: 20519515
-        }
-        xrp.getTransaction(req.body.id, options).then((result) => {
-            res.json({ code: 0, data: result})
+        api.getServerInfo().then(info => {
+            const arr = info.completeLedgers.spit('-')
+            const options = {
+                minLedgerVersion: arr[0],
+                maxLedgerVersion: arr[1]
+            }
+            xrp.getTransaction(req.body.id, options).then((result) => {
+                res.json({ code: 0, data: result})
+            })
         })
     })
 })

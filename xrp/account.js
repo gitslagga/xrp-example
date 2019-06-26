@@ -14,14 +14,10 @@ router.use(function timeLog(req, res, next) {
 
 router.post('/generateAddress', async function (req, res) {
     const bob = await xrp.generateAddress()
-    const data = {
-        address: bob.address,
-        secret: bob.secret
-    }
 
     res.json({
         code: 0,
-        data
+        data: bob
     })
 })
 
