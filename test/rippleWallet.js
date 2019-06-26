@@ -33,8 +33,8 @@ function parsePushData(data, listenAccount) {
         var transaction = data.transaction;
         if (data.hasOwnProperty('type') && data.type == "transaction" && transaction.TransactionType == "Payment") {
             if (listenAccount != transaction.Destination && listenAccount == transaction.Account) {
-                //xrpPushInfo['dirct'] = 0; //出账通知，如果放开这句，在注释下面一句就也能监听出帐消息了
-                return xrpPushInfo;
+                xrpPushInfo['dirct'] = 0; //出账通知，如果放开这句，在注释下面一句就也能监听出帐消息了
+                // return xrpPushInfo;
             }
             else if (listenAccount == transaction.Destination) {
                 xrpPushInfo['dirct'] = 1;//进账通知
