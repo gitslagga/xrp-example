@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const bodyParser = require('body-parser')
 
-const xrp = require('../lib/websocket')
+const { xrp, xrpPromise } = require('../lib/websocket')
 const logger = require('../lib/logger')
 
 router.use(bodyParser.json())
@@ -39,13 +39,11 @@ router.post('/getBalances', async function (req, res) {
 
     logger.info('Request Body: ', req.body)
 
-    xrp.connect().then(async () => {
+    xrpPromise.then(async () => {
         const data = await xrp.getBalances(req.body.address)
         logger.info('Balances: ', JSON.stringify(data))
 
         res.json({ code: 0, data: data })
-    }).then(() => {
-        xrp.disconnect()
     }).catch(error => {
         logger.info(error)
         res.json({ code: 400, msg: error.data && error.data.error_message })
@@ -58,13 +56,11 @@ router.post('/getAccountInfo', async (req, res) => {
 
     logger.info('Request Body: ', req.body)
 
-    xrp.connect().then(async () => {
+    xrpPromise.then(async () => {
         const account_info = await xrp.getAccountInfo(req.body.address)
 
         logger.info('Account Info: ', JSON.stringify(account_info))
         res.json({code: 0, data: account_info})
-    }).then(() => {
-        xrp.disconnect()
     }).catch(error => {
         logger.info(error)
         res.json({ code: 400, msg: error.data && error.data.error_message })
