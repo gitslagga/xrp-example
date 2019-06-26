@@ -1,6 +1,6 @@
 const RippleAPI = require('ripple-lib').RippleAPI;
 const WebSocket = require('ws');
-const ipaddress = "wss://s2.ripple.com:443";//"wss://s-west.ripple.com"; //服务器是瑞波官方搭建的，如果连接后面的是获取不到历史数据的
+const ipaddress = "wss://s.altnet.rippletest.net";//"wss://s-west.ripple.com"; //服务器是瑞波官方搭建的，如果连接后面的是获取不到历史数据的
 const instructions = { maxLedgerVersionOffset: 5 };
 const INTERVAL = 1000;
 const api = new RippleAPI({ server: ipaddress });
