@@ -46,6 +46,9 @@ router.post('/getBalances', async function (req, res) {
         res.json({ code: 0, data: data })
     }).then(() => {
         xrp.disconnect()
+    }).catch(error => {
+        logger.info(error)
+        res.json({ code: 400, msg: error.data && error.data.error_message })
     })
 })
 
@@ -62,6 +65,9 @@ router.post('/getAccountInfo', async (req, res) => {
         res.json({code: 0, data: account_info})
     }).then(() => {
         xrp.disconnect()
+    }).catch(error => {
+        logger.info(error)
+        res.json({ code: 400, msg: error.data && error.data.error_message })
     })
 })
 
