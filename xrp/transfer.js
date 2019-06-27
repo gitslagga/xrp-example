@@ -4,59 +4,32 @@ const router = express.Router()
 const {xrp, xrpPromise} = require('../lib/websocket')
 const logger = require('../lib/logger')
 
-async function assetsTransfer(from, key, to, value, memo) {
+function assetsTransfer(from, key, to, value, tag, quit, fail) {
     xrpPromise.then(async () => {
-        const bobAssets = await xrp.getBalances(from)
-        logger.info('bobAssets: ', JSON.stringify(bobAssets))
-    
-        const free = bobAssets.filter(assets => assets.currency === 'XRP').map(data => {
-            return Number(data.value)
-        })[0]
-    
-        const fee = await xrp.getFee()
-        if (free < (value + fee)) {
-            logger.info(`${from} has ${free} amount, need ${value + fee} amount`)
-            return { code: 400, msg: 'not enough amount' }
-        }
-
-        xrp.preparePayment(from, {
+        const payment = {
             source: {
                 address: from,
                 maxAmount: {
-                    value,
+                    value: String(value),
                     currency: 'XRP'
                 }
             },
             destination: {
-                address: to,
+                address: to,                
                 amount: {
-                    value,
+                    value: String(value),
                     currency: 'XRP'
-                }
+                },
+                tag
             }
-        }).then(prepared => {
+        }
+        const instructions = {maxLedgerVersionOffset: 5}
+        return xrp.preparePayment(from, payment, instructions).then(prepared => {
             const { id, signedTransaction } = xrp.sign(prepared.txJSON, key)
             console.log('Payment transaction signed...', id)
-            xrp.submit(signedTransaction).then(async (result) => {
-                console.log(`Funded ${to} with ${value} XRP`)
-                logger.info('submit result: ', result)
 
-                await xrp.getServerInfo().then(info => {
-                    logger.info('getServerInfo: ', info)
-                    const arr = info.completeLedgers.split('-')
-                    const options = {
-                        minLedgerVersion: Number(arr[0]),
-                        maxLedgerVersion: Number(arr[1])
-                    }
-                    xrp.getTransaction(id, options).then((result) => {
-                        res.json({ code: 0, data: result})
-                    })
-                })
-            })
+            xrp.submit(signedTransaction).then(quit, fail)
         })
-    }).catch(err => { 
-        xrp.connect().then() 
-        console.log(err) 
     })
 }
 
@@ -67,10 +40,13 @@ router.post('/assetsTransfer', async function (req, res) {
 
     logger.info('Request Body: ', req.body)
 
-    // xrp.connect().then(async () => {
-        const transfers = await assetsTransfer(req.body.from, req.body.key, req.body.to, req.body.value, req.body.memo)
-        res.json(transfers)
-    // })
+    assetsTransfer(req.body.from, req.body.key, req.body.to, req.body.value, req.body.tag, function(result) {
+        logger.info('AssetsTransfer Result: ', result)
+        res.json({ code: 0, data: result })
+    }, function(error){
+        logger.error('AssetsTransfer Error: ' + error)
+        res.json({ code: 500, msg: error })
+    })
 })
 
 router.post('/getTransaction', async function (req, res) {
