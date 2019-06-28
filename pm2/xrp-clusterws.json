@@ -1,0 +1,12 @@
+{
+    "apps": [{
+        "name": "xrp-clusterws",
+        "script": "./ws.js",
+        "log_date_format": "YYYY-MM-DD HH:mm:ss SSS",
+        "env": {
+            "NODE_ENV": "production"
+        },
+        "output": "/tmp/wwwlogs/xrp-clusterws/out.log",
+        "error": "/tmp/wwwlogs/xrp-clusterws/error.log"
+    }]
+}
