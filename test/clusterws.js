@@ -17,6 +17,17 @@ ws.on('message', (data) => {
     
     if (typeof data == 'object' && data.toString() == '9') {
         ws.send(Buffer.from('A'))
+        return
+    }
+
+    data = JSON.parse(data)
+    if (data && data['#'][1] == 'accountInfo') {
+        logger.info('account change from account info', data['#'][2])
+
+        const res = data['#'][1]
+        if (res.code == 0) {
+            logger.info('handle account change', res.data)
+        }
     }
 })
 ws.on('close', (() => {
