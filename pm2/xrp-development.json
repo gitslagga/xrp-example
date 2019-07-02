@@ -1,12 +1,12 @@
 {
     "apps": [{
-        "name": "xrp-develoption",
+        "name": "xrp-development",
         "script": "./index.js",
         "log_date_format": "YYYY-MM-DD HH:mm:ss SSS",
         "env": {
-            "NODE_ENV": "develoption"
+            "NODE_ENV": "development"
         },
-        "output": "/tmp/wwwlogs/xrp-develoption/out.log",
-        "error": "/tmp/wwwlogs/xrp-develoption/error.log"
+        "output": "/tmp/wwwlogs/xrp-development/out.log",
+        "error": "/tmp/wwwlogs/xrp-development/error.log"
     }]
 }
