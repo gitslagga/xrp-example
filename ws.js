@@ -18,3 +18,15 @@ function Worker() {
         }, 1000)
     })
 }
+
+process.on('uncaughtException', (err) => {
+    if (err) {
+        logger.error(err);
+    }
+});
+
+process.on('unhandledRejection', (err) => {
+    if (err) {
+        logger.error(err);
+    }
+});
