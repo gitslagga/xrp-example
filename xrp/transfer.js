@@ -38,7 +38,7 @@ router.post('/assetsTransfer', async function (req, res) {
     if (!req.body || !req.body.from || !req.body.key || !req.body.to || !req.body.value || !req.body.tag)
         return res.json({ code: 404, msg: 'missing params' })
 
-    logger.info('Request Body: ', req.body)
+    logger.info('Request Body: ', req.body.from, req.body.to, req.body.value, req.body.tag)
 
     assetsTransfer(req.body.from, req.body.key, req.body.to, req.body.value, req.body.tag, function(result) {
         logger.info('AssetsTransfer Result: ', result)
