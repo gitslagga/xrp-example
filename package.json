@@ -2,7 +2,7 @@
   "name": "xrp-example",
   "version": "1.0.0",
   "dependencies": {
-    "body-parser": "^1.20.5",
+    "body-parser": "^1.20.6",
     "clusterws": "^3.3.1",
     "express": "^4.22.2",
     "ripple-lib": "^1.2.4"
